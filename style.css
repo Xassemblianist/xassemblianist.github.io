@@ -1,0 +1,25 @@
+overpass{
+    font-family: "Overpass", serif;
+    font-optical-sizing: auto;
+    font-size: 20px;
+    font-weight: weight;
+    font-style: normal;
+    padding-left: 20pt;
+      }
+
+    overpass1{
+    font-family: "Overpass", serif;
+    font-optical-sizing: auto;
+    font-size: 40px;
+    font-weight: 600;
+    padding-left: 10pt;
+      }
+    
+    overpassuyari{
+    font-family: "Overpass", serif;
+    font-optical-sizing: auto;
+    font-size: 20px;
+    font-weight: 600;
+    padding-left: 1pt;
+    color: red;
+      }
