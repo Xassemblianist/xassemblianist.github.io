@@ -27,9 +27,13 @@ overpass{
       }
     
     .buton1{
-    border-radius: 100px;
+    border-radius: 20px;
     background-color: red;
-    width: 250px
+    width: 50px
+    font-family: "Overpass", serif;
+    font-size:20px
+    font-weight: 600;
+    
         
         
         
