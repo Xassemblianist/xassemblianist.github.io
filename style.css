@@ -32,7 +32,7 @@ overpass{
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
-	font-family:Overpass;
+	font-family: "Overpass", serif;
 	font-size:17px;
 	padding:16px 31px;
 	text-decoration:none;
