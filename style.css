@@ -1,0 +1,46 @@
+overpass{
+    font-family: "Overpass";
+    font-optical-sizing: auto;
+    font-size: 20px;
+    font-weight: 400;
+    font-style: normal;
+      }
+
+    overpass1{
+    font-family: "Overpass";
+    font-optical-sizing: auto;
+    font-size: 40px;
+    font-weight: 600;
+    padding-left: 10pt;
+      }
+    
+    overpassuyari{
+    font-family: "Overpass";
+    font-optical-sizing: auto;
+    font-size: 20px;
+    font-weight: 600;
+    padding-left: 1pt;
+    color: red;
+      }
+    
+    .buton1{
+    border-radius: 100px;
+    border: 2px solid;
+    background-color: black;
+    color: white;
+    border-color: white;
+    width: 250px;
+    font-family: "Overpass";
+    font-size:10pt;
+    font-weight: 600;
+    text-decoration:none;
+    padding: 15px 32px;
+    }
+
+    .buton1:hover{
+    color:black;
+    background-color: white;
+    border-color: black;
+    transition-duration:700ms;
+
+      }
