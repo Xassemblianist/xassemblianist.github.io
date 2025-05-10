@@ -1,419 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Futbol Oyunu (Hata Ayıklama)</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #000;
-      font-family: Arial, sans-serif;
-    }
-    canvas {
-      display: block;
-    }
-    #overlay, #gameover {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-    }
-    #overlay.hidden, #gameover.hidden {
-      display: none;
-    }
-    #score, #clock {
-      position: absolute;
-      top: 10px;
-      background: rgba(0,0,0,0.5);
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 18px;
-      color: #fff;
-      z-index: 5;
-    }
-    #score { left: 10px; }
-    #clock { right: 10px; }
-    button {
-      padding: 12px 24px;
-      font-size: 18px;
-      border-radius: 10px;
-      background-color: #ffffff;
-      color: #000;
-      border: none;
-      cursor: pointer;
-    }
-    #mobile-controls {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 20px;
-      z-index: 10;
-    }
-    .circle {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: white;
-      color: black;
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kütüphane Yükleme ve Buton Testi</title>
+    <style>
+        html, body { margin: 0; padding: 0; overflow: hidden; background: #000; font-family: Arial, sans-serif; }
+        canvas { display: block; } /* Bu oyunda canvas olmayacak ama stil kalabilir */
+        #overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; text-align: center;}
+        button { padding: 12px 24px; font-size: 18px; border-radius: 10px; background-color: #ffffff; color: #000; border: none; cursor: pointer; margin-top: 20px;}
+    </style>
 </head>
 <body>
-  <div id="overlay">
-    <h1>3D Futbol Oyunu</h1>
-    <button id="startBtn">Oyuna Başla</button>
-  </div>
-  <div id="gameover" class="hidden">
-    <h1>Oyun Bitti</h1>
-    <p id="result"></p>
-    <button onclick="window.location.reload()">Tekrar Oyna</button>
-  </div>
-  <div id="score">Sen: 0 - AI: 0</div>
-  <div id="clock">60</div>
-  <div id="mobile-controls">
-    <div class="circle" ontouchstart="move.left=true" ontouchend="move.left=false">⯇</div>
-    <div class="circle" ontouchstart="move.right=true" ontouchend="move.right=false">⯈</div>
-    <div class="circle" ontouchstart="move.forward=true" ontouchend="move.forward=false">▲</div>
-    <div class="circle" ontouchstart="kickBall()">⚽</div>
-  </div>
+    <div id="overlay">
+        <h1>Kütüphane ve Buton Testi</h1>
+        <p>Lütfen çıkan uyarı mesajlarını takip et.</p>
+        <button id="startBtn">Test Butonu</button>
+    </div>
 
-  <script type="module">
-    import * as THREE from 'https://cdn.skypack.dev/three';
-    import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
+    <script type="module">
+        // ADIM A: Script çalışmaya başladı mı?
+        alert("ADIM A: Script çalışmaya başladı.");
 
-    console.log("Script yükleniyor..."); // EKLENDİ
+        try {
+            // ADIM B_oncesi: Kütüphaneler import edilmeye çalışılıyor.
+            alert("ADIM B_oncesi: Kütüphaneler (THREE.js, CANNON.js) şimdi import edilecek. Bu adımdan sonra bir 'ADIM B' mesajı görmezseniz, import sırasında sorun olmuş olabilir (tarayıcı konsolunda hata olurdu).");
 
-    let scene, camera, renderer, world;
-    let player, ai, ball;
-    let score = { player: 0, ai: 0 };
-    let timeLeft = 60;
-    let move = { left: false, right: false, forward: false };
-    let animationId;
-    const GOAL_LINE_X = 24;
+            import * as THREE from 'https://cdn.skypack.dev/three';
+            import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
 
-    document.getElementById('startBtn').addEventListener('click', () => {
-      console.log("Oyuna Başla butonuna tıklandı!");
-      document.getElementById('overlay').classList.add('hidden');
-      
-      console.log("init() fonksiyonu çağrılıyor...");
-      try {
-        init();
-        console.log("init() fonksiyonu başarıyla tamamlandı.");
-      } catch (e) {
-        console.error("init() FONKSİYONUNDA HATA OLUŞTU:", e);
-        alert("Oyun başlatılırken bir hata oluştu (init). Detaylar için konsola bakın."); // Kullanıcıya geri bildirim
-        return; 
-      }
-      
-      console.log("animate() fonksiyonu çağrılıyor...");
-      try {
-        animate();
-        console.log("animate() fonksiyonu çağrıldı (ilk frame istendi).");
-      } catch (e) {
-        console.error("animate() FONKSİYONUNDA HATA OLUŞTU:", e);
-        alert("Oyun animasyonu başlatılırken bir hata oluştu. Detaylar için konsola bakın.");
-        return;
-      }
-
-      console.log("startTimer() fonksiyonu çağrılıyor...");
-      try {
-        startTimer();
-        console.log("startTimer() fonksiyonu başarıyla tamamlandı.");
-      } catch (e) {
-        console.error("startTimer() FONKSİYONUNDA HATA OLUŞTU:", e);
-        alert("Zamanlayıcı başlatılırken bir hata oluştu. Detaylar için konsola bakın.");
-      }
-      console.log("Buton tıklama olayı işleyici tamamlandı.");
-    });
-
-    function createGoalPost(width, height, depth, color = 0xffffff) {
-        const geometry = new THREE.BoxGeometry(width, height, depth);
-        const material = new THREE.MeshStandardMaterial({ color: color });
-        return new THREE.Mesh(geometry, material);
-    }
-
-    function createGoal(goalDepth = 2, goalWidth = 8, goalHeight = 4, postThickness = 0.3) {
-        const goal = new THREE.Group();
-        const leftPost = createGoalPost(postThickness, goalHeight, postThickness);
-        leftPost.position.set(0, goalHeight / 2, -goalWidth / 2 + postThickness / 2);
-        goal.add(leftPost);
-        const rightPost = createGoalPost(postThickness, goalHeight, postThickness);
-        rightPost.position.set(0, goalHeight / 2, goalWidth / 2 - postThickness / 2);
-        goal.add(rightPost);
-        const crossbar = createGoalPost(postThickness, postThickness, goalWidth);
-        crossbar.position.set(0, goalHeight - postThickness / 2, 0);
-        crossbar.rotation.x = Math.PI / 2;
-        goal.add(crossbar);
-        const backLeftPost = createGoalPost(postThickness, goalHeight, postThickness);
-        backLeftPost.position.set(-goalDepth + postThickness/2, goalHeight / 2, -goalWidth / 2 + postThickness / 2);
-        goal.add(backLeftPost);
-        const backRightPost = createGoalPost(postThickness, goalHeight, postThickness);
-        backRightPost.position.set(-goalDepth + postThickness/2, goalHeight / 2, goalWidth / 2 - postThickness / 2);
-        goal.add(backRightPost);
-        const backCrossbar = createGoalPost(postThickness, postThickness, goalWidth);
-        backCrossbar.position.set(-goalDepth + postThickness/2, goalHeight - postThickness / 2, 0);
-        backCrossbar.rotation.x = Math.PI / 2;
-        goal.add(backCrossbar);
-        const topConnector1 = createGoalPost(goalDepth, postThickness, postThickness);
-        topConnector1.position.set(-goalDepth/2, goalHeight-postThickness/2, -goalWidth/2 + postThickness/2);
-        topConnector1.rotation.z = Math.PI / 2;
-        goal.add(topConnector1);
-        const topConnector2 = createGoalPost(goalDepth, postThickness, postThickness);
-        topConnector2.position.set(-goalDepth/2, goalHeight-postThickness/2, goalWidth/2 - postThickness/2);
-        topConnector2.rotation.z = Math.PI / 2;
-        goal.add(topConnector2);
-        return goal;
-    }
-
-    function init() {
-      console.log("init() başladı.");
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-      camera.position.set(0, 10, 20);
-      camera.lookAt(0,0,0);
-
-      renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.shadowMap.enabled = true;
-      document.body.appendChild(renderer.domElement);
-
-      world = new CANNON.World();
-      world.gravity.set(0, -9.82, 0);
-      world.broadphase = new CANNON.SAPBroadphase(world);
-      world.allowSleep = true;
-
-      const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-      scene.add(ambient);
-      const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-      dirLight.position.set(10, 20, 15);
-      dirLight.castShadow = true;
-      dirLight.shadow.mapSize.width = 1024;
-      dirLight.shadow.mapSize.height = 1024;
-      scene.add(dirLight);
-
-      const groundMaterial = new CANNON.Material("groundMaterial");
-      const groundShape = new CANNON.Plane();
-      const groundBody = new CANNON.Body({ mass: 0, material: groundMaterial });
-      groundBody.addShape(groundShape);
-      groundBody.quaternion.setFromEuler(-Math.PI/2, 0, 0);
-      world.addBody(groundBody);
-
-      const ground = new THREE.Mesh(
-        new THREE.PlaneGeometry(50, 30),
-        new THREE.MeshStandardMaterial({ color: 0x228B22 })
-      );
-      ground.rotation.x = -Math.PI/2;
-      ground.receiveShadow = true;
-      scene.add(ground);
-
-      const goal1 = createGoal();
-      goal1.position.set(-GOAL_LINE_X -1, 0, 0);
-      scene.add(goal1);
-
-      const goal2 = createGoal();
-      goal2.position.set(GOAL_LINE_X +1, 0, 0);
-      goal2.rotation.y = Math.PI;
-      scene.add(goal2);
-
-      const playerMaterial = new CANNON.Material("playerMaterial");
-      player = createPlayer(-10, 1, 0, 0x0000ff, playerMaterial);
-      if (player && player.mesh) player.mesh.castShadow = true;
-
-
-      const aiMaterial = new CANNON.Material("aiMaterial");
-      ai = createPlayer(10, 1, 0, 0xff0000, aiMaterial);
-      if (ai && ai.mesh) ai.mesh.castShadow = true;
-
-
-      const ballMaterial = new CANNON.Material("ballMaterial");
-      const ballShape = new CANNON.Sphere(0.5);
-      ball = new CANNON.Body({ mass: 1, shape: ballShape, material: ballMaterial });
-      ball.position.set(0, 0.5, 0);
-      ball.linearDamping = 0.1;
-      ball.angularDamping = 0.1;
-      world.addBody(ball);
-
-      const ballMesh = new THREE.Mesh(
-        new THREE.SphereGeometry(0.5, 32, 32),
-        new THREE.MeshStandardMaterial({ color: 0xffffff })
-      );
-      ballMesh.castShadow = true;
-      ball.mesh = ballMesh;
-      scene.add(ballMesh);
-      
-      const groundPlayerContact = new CANNON.ContactMaterial(groundMaterial, playerMaterial, { friction: 0.3, restitution: 0.1 });
-      world.addContactMaterial(groundPlayerContact);
-      const groundAiContact = new CANNON.ContactMaterial(groundMaterial, aiMaterial, { friction: 0.3, restitution: 0.1 });
-      world.addContactMaterial(groundAiContact);
-      const groundBallContact = new CANNON.ContactMaterial(groundMaterial, ballMaterial, { friction: 0.4, restitution: 0.7 });
-      world.addContactMaterial(groundBallContact);
-      const playerBallContact = new CANNON.ContactMaterial(playerMaterial, ballMaterial, { friction: 0.1, restitution: 0.5 });
-      world.addContactMaterial(playerBallContact);
-      const aiBallContact = new CANNON.ContactMaterial(aiMaterial, ballMaterial, { friction: 0.1, restitution: 0.5 });
-      world.addContactMaterial(aiBallContact);
-      console.log("init() bitti.");
-    }
-
-    function createPlayer(x, y, z, color, material) {
-      console.log(`createPlayer çağrıldı: x=${x}, y=${y}, z=${z}, color=${color}`);
-      const shape = new CANNON.Sphere(1);
-      const body = new CANNON.Body({ mass: 70, shape, material: material });
-      body.position.set(x, y, z);
-      body.linearDamping = 0.9;
-      world.addBody(body);
-
-      const mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(1, 16, 16),
-        new THREE.MeshStandardMaterial({ color })
-      );
-      body.mesh = mesh;
-      scene.add(mesh);
-      console.log("Player mesh sahneye eklendi.");
-      return body;
-    }
-    
-    let playerSpeed = 0.2;
-    let aiSpeedFactor = 0.025;
-
-    function animate() {
-      animationId = requestAnimationFrame(animate);
-      
-      const force = new CANNON.Vec3();
-      const playerMoveSpeed = 200;
-
-      const currentVel = player.velocity;
-      const targetVel = new CANNON.Vec3();
-      if (move.left) targetVel.x -= playerSpeed;
-      if (move.right) targetVel.x += playerSpeed;
-      if (move.forward) targetVel.z -= playerSpeed;
-      
-      player.velocity.x = THREE.MathUtils.lerp(currentVel.x, targetVel.x, 0.1);
-      player.velocity.z = THREE.MathUtils.lerp(currentVel.z, targetVel.z, 0.1);
-
-      const dx = ball.position.x - ai.position.x;
-      const dz = ball.position.z - ai.position.z;
-      const distanceToBall = Math.sqrt(dx*dx + dz*dz);
-      
-      if (distanceToBall > 0.5) {
-        ai.velocity.x = THREE.MathUtils.lerp(ai.velocity.x, dx * aiSpeedFactor * 20, 0.05);
-        ai.velocity.z = THREE.MathUtils.lerp(ai.velocity.z, dz * aiSpeedFactor * 20, 0.05);
-      } else {
-        ai.velocity.x = THREE.MathUtils.lerp(ai.velocity.x, 0, 0.1);
-        ai.velocity.z = THREE.MathUtils.lerp(ai.velocity.z, 0, 0.1);
-      }
-
-      world.step(1/60);
-
-      player.mesh.position.copy(player.position);
-      player.mesh.quaternion.copy(player.quaternion);
-      ai.mesh.position.copy(ai.position);
-      ai.mesh.quaternion.copy(ai.quaternion);
-      ball.mesh.position.copy(ball.position);
-      ball.mesh.quaternion.copy(ball.quaternion);
-
-      camera.position.x = player.position.x;
-      camera.position.z = player.position.z + 15;
-      camera.lookAt(player.mesh.position);
-
-      checkGoal();
-      renderer.render(scene, camera);
-    }
-
-    function checkGoal() {
-      if (ball.position.x < -GOAL_LINE_X && Math.abs(ball.position.z) < 4 && ball.position.y < 4) {
-        score.ai++;
-        resetPositionsAfterGoal(true);
-        updateScore();
-      } else if (ball.position.x > GOAL_LINE_X && Math.abs(ball.position.z) < 4 && ball.position.y < 4) {
-        score.player++;
-        resetPositionsAfterGoal(false);
-        updateScore();
-      }
-    }
-
-    function resetPositionsAfterGoal(aiScored) {
-      ball.velocity.set(0,0,0);
-      ball.angularVelocity.set(0,0,0);
-      ball.position.set(0, 2, 0);
-      player.velocity.set(0,0,0);
-      player.angularVelocity.set(0,0,0);
-      ai.velocity.set(0,0,0);
-      ai.angularVelocity.set(0,0,0);
-      if (aiScored) {
-          player.position.set(-2, 1, 0);
-          ai.position.set(10, 1, 0);
-      } else {
-          player.position.set(-10, 1, 0);
-          ai.position.set(2, 1, 0);
-      }
-    }
-    
-    function updateScore() {
-      document.getElementById('score').textContent = `Sen: ${score.player} - AI: ${score.ai}`;
-    }
-
-    function startTimer() {
-      console.log("startTimer() başladı.");
-      timeLeft = 60;
-      document.getElementById('clock').textContent = timeLeft;
-      const interval = setInterval(() => {
-        timeLeft--;
-        document.getElementById('clock').textContent = timeLeft;
-        if (timeLeft <= 0) {
-          clearInterval(interval);
-          if (animationId) cancelAnimationFrame(animationId);
-          endGame();
+            // ADIM B: Kütüphaneler yüklendi ve tanımlı mı?
+            // Bu blok, importlar başarılı olursa çalışır.
+            if (typeof THREE === 'undefined' || typeof CANNON === 'undefined') {
+                alert("ADIM B - HATA: Kütüphaneler yüklendi AMA TANIMSIZ görünüyor (THREE veya CANNON 'undefined'). Bu beklenmedik bir durum.");
+            } else {
+                alert("ADIM B - BAŞARILI: Kütüphaneler (THREE, CANNON) başarıyla import edildi ve tanımlı.");
+            }
+        } catch (e) {
+            // Statik import'lar doğrudan try-catch ile yakalanamaz.
+            // Bu catch bloğu genellikle çalışmaz, import hatası olursa script burada durabilir
+            // ve tarayıcı konsoluna hata yazar. Ama yine de bir kontrol.
+            alert("ADIM B - KRİTİK IMPORT YAKALAMA HATASI (Beklenmedik): " + e.message);
         }
-      }, 1000);
-      console.log("startTimer() bitti, interval ayarlandı.");
-    }
 
-    function endGame() {
-      console.log("endGame() çağrıldı."); // EKLENDİ
-      document.getElementById('gameover').classList.remove('hidden');
-      const result = score.player > score.ai ? "Kazandın!" : score.player < score.ai ? "Kaybettin!" : "Berabere!";
-      document.getElementById('result').textContent = result;
-    }
+        const btn = document.getElementById('startBtn');
+        const overlayDiv = document.getElementById('overlay');
 
-    window.move = move;
-    window.kickBall = () => {
-      console.log("kickBall() çağrıldı."); // EKLENDİ
-      if(ball.position.distanceTo(player.position) < 1.8) {
-          const direction = new CANNON.Vec3();
-          ball.position.vsub(player.position, direction);
-          direction.normalize();
-          direction.y = 0.2; 
-          direction.scale(25, direction); 
-          ball.applyImpulse(direction, player.position);
-          console.log("Topa vuruldu."); // EKLENDİ
-      } else {
-        console.log("Topa vurulamadı, oyuncu topa yeterince yakın değil."); //EKLENDİ
-      }
-    }
+        if (btn && overlayDiv) {
+            // ADIM C: Buton bulundu mu?
+            alert("ADIM C: 'Test Butonu' bulundu.");
 
-    window.addEventListener('resize', () => {
-        console.log("Pencere yeniden boyutlandırıldı."); // EKLENDİ
-        if (camera && renderer) { // init tamamlanmadan çağrılırsa hata vermesin
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            btn.addEventListener('click', function() {
+                // ADIM D: Butona tıklandı mı?
+                alert("ADIM D: 'Test Butonu'na tıklandı!");
+                
+                overlayDiv.innerHTML = '<h1>Test Başarılı!</h1><p>Buton çalıştı ve kütüphaneler de muhtemelen yüklendi (ADIM B mesajına göre).</p>';
+                overlayDiv.style.backgroundColor = 'rgba(0, 80, 0, 0.8)'; // Koyu yeşil
+            });
+        } else {
+            alert("ADIM C - HATA: 'Test Butonu' (startBtn) veya 'overlay' HTML'de bulunamadı.");
         }
-    }, false);
-    console.log("Script yüklendi ve olay dinleyicileri ayarlandı."); // EKLENDİ
-  </script>
+
+        // ADIM E: Script'in sonuna ulaşıldı mı?
+        alert("ADIM E: Test scriptinin sonuna ulaşıldı.");
+    </script>
 </body>
 </html>
