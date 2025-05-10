@@ -1,46 +1,57 @@
-overpass{
-    font-family: "Overpass";
-    font-optical-sizing: auto;
-    font-size: 20px;
-    font-weight: 400;
-    font-style: normal;
-      }
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    touch-action: none; /* Dokunmatik kaydırmayı engelle */
+}
 
-    overpass1{
-    font-family: "Overpass";
-    font-optical-sizing: auto;
-    font-size: 40px;
-    font-weight: 600;
-    padding-left: 10pt;
-      }
-    
-    overpassuyari{
-    font-family: "Overpass";
-    font-optical-sizing: auto;
-    font-size: 20px;
-    font-weight: 600;
-    padding-left: 1pt;
-    color: red;
-      }
-    
-    .buton1{
-    border-radius: 100px;
-    border: 2px solid;
-    background-color: black;
+#gameContainer {
+    text-align: center;
+    position: relative; /* Kontrolleri konumlandırmak için */
+}
+
+#gameCanvas {
+    border: 2px solid black;
+    background-color: green; /* Saha rengi */
+    display: block; /* Altında boşluk olmaması için */
+    margin: 0 auto;
+}
+
+#scoreBoard {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#controls {
+    margin-top: 10px;
+    display: flex; /* Butonları yan yana dizmek için */
+    flex-wrap: wrap; /* Küçük ekranlarda alta sarması için */
+    justify-content: center;
+}
+
+#controls button {
+    padding: 10px 15px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
     color: white;
-    border-color: white;
-    width: 250px;
-    font-family: "Overpass";
-    font-size:10pt;
-    font-weight: 600;
-    text-decoration:none;
-    padding: 15px 32px;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Mobil Cihazlar İçin Ek Ayarlamalar */
+@media (max-width: 600px) {
+    #scoreBoard {
+        font-size: 20px;
     }
-
-    .buton1:hover{
-    color:black;
-    background-color: white;
-    border-color: black;
-    transition-duration:700ms;
-
-      }
+    #controls button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    /* Canvas boyutunu küçültebilir veya gameContainer'ı ölçeklendirebilirsiniz */
+}
