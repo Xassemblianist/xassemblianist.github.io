@@ -1,23 +1,241 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>JavaScript Futbol Oyunu</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Futbol Oyunu</title>
+  <style>
+    html, body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      font-family: sans-serif;
+    }
+    canvas {
+      display: block;
+    }
+    #menu, #gameover {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    #controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    #scoreboard, #timer {
+      position: absolute;
+      top: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 20px;
+      z-index: 10;
+    }
+    #scoreboard { left: 10px; }
+    #timer { right: 10px; }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+      cursor: pointer;
+    }
+    .circle-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+  </style>
 </head>
 <body>
-    <div id="gameContainer">
-        <canvas id="gameCanvas"></canvas>
-        <div id="scoreBoard">Skor: <span id="player1Score">0</span> - <span id="player2Score">0</span></div>
-        <div id="controls">
-            <button id="btnUp">Yukarı</button>
-            <button id="btnDown">Aşağı</button>
-            <button id="btnLeft">Sol</button>
-            <button id="btnRight">Sağ</button>
-            <button id="btnShoot">Şut</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
+  <div id="menu">
+    <h1>3D Futbol Oyunu</h1>
+    <button onclick="startGame()">Oyuna Başla</button>
+  </div>
+  <div id="gameover" style="display:none">
+    <h1>Oyun Bitti</h1>
+    <p id="resultText"></p>
+    <button onclick="location.reload()">Yeniden Oyna</button>
+  </div>
+  <div id="controls">
+    <button class="circle-btn" ontouchstart="move.left=true" ontouchend="move.left=false">⯇</button>
+    <button class="circle-btn" ontouchstart="move.right=true" ontouchend="move.right=false">⯈</button>
+    <button class="circle-btn" ontouchstart="move.forward=true" ontouchend="move.forward=false">▲</button>
+    <button class="circle-btn" ontouchstart="kickBall()">⚽</button>
+  </div>
+  <div id="scoreboard">Sen: 0 - AI: 0</div>
+  <div id="timer">60</div>
+  <audio id="goalSound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_6c9566612c.mp3"></audio>
+  <audio id="kickSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_24b0f9cbe1.mp3"></audio>
+  <script type="module">
+    import * as THREE from 'https://cdn.skypack.dev/three@0.152.2';
+    import * as CANNON from 'https://cdn.skypack.dev/cannon-es@0.20.0';
+
+    let scene, camera, renderer, world;
+    let player, ai, ball, playerMesh, aiMesh, ballMesh;
+    let move = { left: false, right: false, forward: false };
+    let score = { player: 0, ai: 0 }, timer = 60, gameLoop;
+
+    const goalSound = document.getElementById('goalSound');
+    const kickSound = document.getElementById('kickSound');
+
+    function startGame() {
+      document.getElementById('menu').style.display = 'none';
+      init();
+      animate();
+      startTimer();
+    }
+
+    function init() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(innerWidth, innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      world = new CANNON.World({ gravity: new CANNON.Vec3(0, -9.82, 0) });
+
+      const groundBody = new CANNON.Body({ mass: 0 });
+      groundBody.addShape(new CANNON.Plane());
+      groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+      world.addBody(groundBody);
+
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(50, 30),
+        new THREE.MeshStandardMaterial({ color: 0x2c8f2c })
+      );
+      ground.rotation.x = -Math.PI / 2;
+      scene.add(ground);
+
+      const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(0, 10, 10);
+      scene.add(light);
+      scene.add(new THREE.AmbientLight(0x404040));
+
+      function createPlayer(color, x) {
+        const geo = new THREE.CapsuleGeometry(0.5, 1.5, 4, 8);
+        const mat = new THREE.MeshStandardMaterial({ color });
+        const mesh = new THREE.Mesh(geo, mat);
+        scene.add(mesh);
+
+        const body = new CANNON.Body({ mass: 1 });
+        body.addShape(new CANNON.Cylinder(0.5, 0.5, 2, 8));
+        body.position.set(x, 1, 0);
+        world.addBody(body);
+
+        return { mesh, body };
+      }
+
+      player = createPlayer(0x0000ff, -10);
+      ai = createPlayer(0xff0000, 10);
+
+      const ballGeo = new THREE.SphereGeometry(0.5, 32, 32);
+      const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+      ballMesh = new THREE.Mesh(ballGeo, ballMat);
+      scene.add(ballMesh);
+
+      ball = new CANNON.Body({ mass: 0.5, shape: new CANNON.Sphere(0.5) });
+      ball.position.set(0, 0.5, 0);
+      world.addBody(ball);
+
+      for (let i of [-24.5, 24.5]) {
+        const goalGeo = new THREE.BoxGeometry(0.2, 4, 0.2);
+        const goalMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        for (let z of [-4, 4]) {
+          const post = new THREE.Mesh(goalGeo, goalMat);
+          post.position.set(i, 2, z);
+          scene.add(post);
+        }
+      }
+
+      camera.position.set(0, 6, 10);
+    }
+
+    function animate() {
+      gameLoop = requestAnimationFrame(animate);
+      if (move.left) player.body.position.x -= 0.1;
+      if (move.right) player.body.position.x += 0.1;
+      if (move.forward) player.body.position.z -= 0.1;
+
+      let dx = ball.position.x - ai.body.position.x;
+      let dz = ball.position.z - ai.body.position.z;
+      ai.body.position.x += dx * 0.02;
+      ai.body.position.z += dz * 0.02;
+
+      world.step(1 / 60);
+
+      player.mesh.position.copy(player.body.position);
+      ai.mesh.position.copy(ai.body.position);
+      ballMesh.position.copy(ball.position);
+
+      camera.position.x = player.body.position.x;
+      camera.position.z = player.body.position.z + 8;
+      camera.lookAt(player.body.position);
+
+      checkGoal();
+      renderer.render(scene, camera);
+    }
+
+    function kickBall() {
+      if (player && ball) {
+        let f = ball.position.vsub(player.body.position);
+        if (f.length() < 3) {
+          f.normalize(); f.scale(10, f); ball.applyImpulse(f, ball.position);
+          kickSound.play();
+        }
+      }
+    }
+
+    function checkGoal() {
+      const z = ball.position.z;
+      if (Math.abs(z) < 4) {
+        if (ball.position.x < -24) { score.ai++; goalSound.play(); reset(); }
+        if (ball.position.x > 24) { score.player++; goalSound.play(); reset(); }
+        document.getElementById('scoreboard').textContent = `Sen: ${score.player} - AI: ${score.ai}`;
+      }
+    }
+
+    function reset() {
+      ball.velocity.setZero();
+      ball.angularVelocity.setZero();
+      ball.position.set(0, 0.5, 0);
+      player.body.position.set(-10, 1, 0);
+      ai.body.position.set(10, 1, 0);
+    }
+
+    function startTimer() {
+      const timerEl = document.getElementById('timer');
+      const interval = setInterval(() => {
+        timer--;
+        timerEl.textContent = timer;
+        if (timer <= 0) {
+          clearInterval(interval);
+          cancelAnimationFrame(gameLoop);
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame() {
+      document.getElementById('gameover').style.display = 'flex';
+      const result = score.player > score.ai ? "Kazandın!" : (score.player < score.ai ? "Kaybettin!" : "Berabere!");
+      document.getElementById('resultText').textContent = result;
+    }
+  </script>
 </body>
 </html>
