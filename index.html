@@ -1,107 +1,131 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deluxe OpenAI-Style Navbar</title>
+  <title>Dassaklı Navbar</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Animate.css -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind config -->
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
             sans: ['Inter', 'sans-serif']
           }
         }
-      },
-      darkMode: 'class'
-    }
+      }
+    };
   </script>
+
+  <!-- Google Fonts (Inter) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  
   <style>
     .neon-text {
-      text-shadow: 0 0 5px #00f2ff, 0 0 10px #00f2ff, 0 0 20px #00f2ff;
-    }
-    .scroll-effect {
-      transition: all 0.3s ease;
+      text-shadow: 0 0 5px #00f6ff, 0 0 10px #00f6ff, 0 0 20px #00f6ff;
     }
   </style>
 </head>
-<body class="bg-white dark:bg-black text-gray-900 dark:text-white font-sans transition duration-500" id="page">
-
-  <!-- Video Background (Optional - replace src with your own hosted video) -->
-  <video autoplay muted loop class="fixed top-0 left-0 w-full h-full object-cover z-[-1] opacity-20">
-    <source src="https://www.videvo.net/videvo_files/converted/2015_08/preview/Dark_Sky_TimeLapse.mov42852.webm" type="video/webm">
-  </video>
+<body class="bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-black text-gray-800 dark:text-white font-sans transition duration-300" id="page">
 
   <!-- Navbar -->
-  <nav id="navbar" class="scroll-effect fixed top-0 w-full z-50 bg-white/70 dark:bg-gray-900/70 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 py-4">
+  <nav id="navbar" class="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-gray-800/60 border-b border-gray-200 dark:border-gray-700 shadow-md transition-all py-4 animate__animated animate__fadeInDown">
     <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+      
+      <!-- Logo -->
       <div class="flex items-center gap-3">
-        <span class="text-2xl font-bold neon-text">DassakNav</span>
+        <span class="text-2xl font-bold neon-text tracking-wide">DassakNav</span>
       </div>
 
-      <ul class="hidden md:flex items-center gap-8 font-medium">
-        <li><a href="#" class="relative group">Anasayfa <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span></a></li>
-        <li class="relative group">
-          <a href="#">Hizmetler</a>
-          <ul class="absolute left-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded shadow hidden group-hover:block animate__animated animate__fadeIn">
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Tasarım</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">SEO</a></li>
-          </ul>
-        </li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">İletişim</a></li>
+      <!-- Menu -->
+      <ul class="hidden md:flex items-center gap-6 text-sm font-medium">
+        <li><a href="#" class="hover:text-blue-500 transition relative group">Anasayfa <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span></a></li>
+        <li><a href="#" class="hover:text-blue-500 transition">Hizmetler</a></li>
+        <li><a href="#" class="hover:text-blue-500 transition">Blog</a></li>
+        <li><a href="#" class="hover:text-blue-500 transition">İletişim</a></li>
+        <li><a href="#" class="hover:text-blue-500 transition">🌐 Türkçe</a></li>
       </ul>
 
-      <div class="flex items-center gap-4">
-        <button id="darkToggle" class="text-xl">🌓</button>
+      <!-- Sağ -->
+      <div class="flex items-center gap-2">
+        <!-- Dark Mode -->
+        <button id="toggleDark">
+          <svg id="moon" class="w-6 h-6 hidden dark:inline text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+          <svg id="sun" class="w-6 h-6 dark:hidden text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v2m0 14v2m9-9h-2M5 12H3m16.24 4.24l-1.42-1.42M7.76 7.76L6.34 6.34m0 11.32l1.42-1.42m10.48-10.48l-1.42 1.42"/></svg>
+        </button>
 
-        <!-- User Dropdown -->
-        <div class="relative group">
-          <img src="https://via.placeholder.com/32" class="rounded-full cursor-pointer w-8 h-8"/>
-          <div class="absolute right-0 mt-2 w-48 p-4 bg-white/30 dark:bg-gray-800/50 backdrop-blur-lg rounded-xl shadow-xl hidden group-hover:block animate__animated animate__fadeIn">
-            <a href="#" class="block py-1">Profil</a>
-            <a href="#" class="block py-1">Ayarlar</a>
-            <a href="#" class="block py-1 text-red-500">Çıkış</a>
-          </div>
-        </div>
+        <a href="#" class="hidden md:inline px-3 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Giriş</a>
+        <a href="#" class="hidden md:inline px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Kayıt Ol</a>
 
-        <button id="menu-toggle" class="md:hidden">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
+        <!-- Hamburger -->
+        <button class="md:hidden" id="menu-toggle">
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
     </div>
-    <div class="md:hidden hidden px-4 pb-4" id="mobile-menu">
-      <ul class="flex flex-col gap-3 mt-3">
-        <li><a href="#">Anasayfa</a></li>
-        <li><a href="#">Hizmetler</a></li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">İletişim</a></li>
+
+    <!-- Mobile Menu -->
+    <div class="md:hidden hidden px-4 pb-4 animate__animated" id="mobile-menu">
+      <ul class="flex flex-col gap-2 mt-3 text-gray-800 dark:text-white">
+        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded" onclick="closeMenu()">🏠 Anasayfa</a></li>
+        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">🛠 Hizmetler</a></li>
+        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">📰 Blog</a></li>
+        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">✉️ İletişim</a></li>
+        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">🌐 Türkçe</a></li>
+        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">🔐 Giriş</a></li>
+        <li><a href="#" class="block px-4 py-2 bg-blue-600 text-white rounded text-center" onclick="closeMenu()">📝 Kayıt Ol</a></li>
       </ul>
     </div>
   </nav>
 
+  <!-- Sayfa içeriği -->
+  <section class="h-[200vh] flex items-center justify-center text-center">
+    <h1 class="text-5xl font-bold neon-text">Hoşgeldin Baba!</h1>
+  </section>
+
+  <!-- JS -->
   <script>
-    const darkToggle = document.getElementById('darkToggle');
+    const darkToggle = document.getElementById('toggleDark');
     const html = document.getElementById('page');
-    darkToggle.addEventListener('click', () => html.classList.toggle('dark'));
+    darkToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+    });
 
-    const menuToggle = document.getElementById('menu-toggle');
+    const menuBtn = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
-    menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.remove('animate__fadeOutUp');
+      mobileMenu.classList.add('animate__fadeInDown');
+    });
+
+    function closeMenu() {
+      mobileMenu.classList.remove('animate__fadeInDown');
+      mobileMenu.classList.add('animate__fadeOutUp');
+      setTimeout(() => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('animate__fadeOutUp');
+      }, 400);
+    }
+
+    // Scroll shrink
+    const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
-      const nav = document.getElementById('navbar');
       if (window.scrollY > 10) {
-        nav.classList.add('py-2');
-        nav.classList.remove('py-4');
+        navbar.classList.add('py-2');
+        navbar.classList.remove('py-4');
       } else {
-        nav.classList.add('py-4');
-        nav.classList.remove('py-2');
+        navbar.classList.remove('py-2');
+        navbar.classList.add('py-4');
       }
     });
   </script>
