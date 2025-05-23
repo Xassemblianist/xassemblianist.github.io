@@ -1,1 +1,65 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    background-color: #333; /* Gezinme çubuğu arka plan rengi */
+    overflow: hidden; /* İçerik taşmasını engelle */
+    display: flex; /* Esnek kutu modeli */
+    justify-content: space-between; /* Öğeleri aralıklı hizala (logo sola, linkler sağa) */
+    align-items: center; /* Öğeleri dikeyde ortala */
+    padding: 0 20px; /* Sağa ve sola iç boşluk */
+}
+
+.navbar .logo {
+    color: white; /* Logo metin rengi */
+    text-decoration: none; /* Alt çizgiyi kaldır */
+    font-size: 1.5em; /* Logo yazı boyutu */
+    padding: 14px 0; /* Yukarı ve aşağı iç boşluk */
+}
+
+.navbar .nav-links {
+    list-style-type: none; /* Madde işaretlerini kaldır */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Linkleri yan yana dizmek için */
+}
+
+.navbar .nav-links li a {
+    display: block; /* Linklerin tüm alanı tıklanabilir yap */
+    color: white; /* Link metin rengi */
+    text-align: center; /* Metni ortala */
+    padding: 14px 16px; /* İç boşluk */
+    text-decoration: none; /* Alt çizgiyi kaldır */
+    transition: background-color 0.3s, color 0.3s; /* Yumuşak geçiş efekti */
+}
+
+.navbar .nav-links li a:hover {
+    background-color: #ddd; /* Üzerine gelince arka plan rengi */
+    color: black; /* Üzerine gelince metin rengi */
+}
+
+/* Daha küçük ekranlar için (isteğe bağlı ama önerilir) */
+@media screen and (max-width: 768px) {
+    .navbar {
+        flex-direction: column; /* Öğeleri alt alta diz */
+        align-items: flex-start; /* Öğeleri sola hizala */
+    }
+
+    .navbar .nav-links {
+        flex-direction: column; /* Linkleri alt alta diz */
+        width: 100%; /* Tam genişlik kullan */
+    }
+
+    .navbar .nav-links li a {
+        text-align: left; /* Metni sola hizala */
+        width: 100%; /* Tam genişlik kullan */
+        box-sizing: border-box; /* Padding ve border'ı genişliğe dahil et */
+    }
+
+    .navbar .logo {
+        padding-bottom: 10px; /* Logo ile linkler arasına boşluk */
+    }
+}
 
