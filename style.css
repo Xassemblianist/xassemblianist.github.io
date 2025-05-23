@@ -1,65 +1,241 @@
+/* Genel Stiller */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
+.content {
+    padding: 100px 20px 20px; /* Navbar'ın altında kalmaması için üst padding */
+    text-align: center;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 80px; /* Navbar yüksekliği */
+}
+
+/* Navbar Stilleri */
 .navbar {
-    background-color: #333; /* Gezinme çubuğu arka plan rengi */
-    overflow: hidden; /* İçerik taşmasını engelle */
-    display: flex; /* Esnek kutu modeli */
-    justify-content: space-between; /* Öğeleri aralıklı hizala (logo sola, linkler sağa) */
-    align-items: center; /* Öğeleri dikeyde ortala */
-    padding: 0 20px; /* Sağa ve sola iç boşluk */
+    background-color: #2c3e50; /* Koyu mavi-gri */
+    color: #ecf0f1; /* Açık gri */
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    position: fixed; /* Sayfa kaydırıldığında sabit kalması için */
+    top: 0;
+    width: 100%;
+    z-index: 999; /* Diğer öğelerin üzerinde kalması için */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.navbar .logo {
-    color: white; /* Logo metin rengi */
-    text-decoration: none; /* Alt çizgiyi kaldır */
-    font-size: 1.5em; /* Logo yazı boyutu */
-    padding: 14px 0; /* Yukarı ve aşağı iç boşluk */
+.navbar-logo {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: bold;
 }
 
-.navbar .nav-links {
-    list-style-type: none; /* Madde işaretlerini kaldır */
+.nav-menu {
+    display: flex;
+    list-style: none;
+    text-align: center;
     margin: 0;
     padding: 0;
-    display: flex; /* Linkleri yan yana dizmek için */
 }
 
-.navbar .nav-links li a {
-    display: block; /* Linklerin tüm alanı tıklanabilir yap */
-    color: white; /* Link metin rengi */
-    text-align: center; /* Metni ortala */
-    padding: 14px 16px; /* İç boşluk */
-    text-decoration: none; /* Alt çizgiyi kaldır */
-    transition: background-color 0.3s, color 0.3s; /* Yumuşak geçiş efekti */
+.nav-item {
+    position: relative; /* Açılır menüler için */
 }
 
-.navbar .nav-links li a:hover {
-    background-color: #ddd; /* Üzerine gelince arka plan rengi */
-    color: black; /* Üzerine gelince metin rengi */
+.nav-links {
+    color: #ecf0f1;
+    display: block;
+    padding: 28px 20px; /* Yüksekliği navbar ile aynı hizada tutmak için */
+    text-decoration: none;
+    transition: color 0.3s ease-out, background-color 0.3s ease-out;
 }
 
-/* Daha küçük ekranlar için (isteğe bağlı ama önerilir) */
-@media screen and (max-width: 768px) {
-    .navbar {
-        flex-direction: column; /* Öğeleri alt alta diz */
-        align-items: flex-start; /* Öğeleri sola hizala */
-    }
-
-    .navbar .nav-links {
-        flex-direction: column; /* Linkleri alt alta diz */
-        width: 100%; /* Tam genişlik kullan */
-    }
-
-    .navbar .nav-links li a {
-        text-align: left; /* Metni sola hizala */
-        width: 100%; /* Tam genişlik kullan */
-        box-sizing: border-box; /* Padding ve border'ı genişliğe dahil et */
-    }
-
-    .navbar .logo {
-        padding-bottom: 10px; /* Logo ile linkler arasına boşluk */
-    }
+.nav-links:hover {
+    color: #1abc9c; /* Turkuaz */
 }
 
+.nav-links.btn {
+    background-color: #e74c3c; /* Kırmızı */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-left: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-links.btn:hover {
+    background-color: #c0392b; /* Daha koyu kırmızı */
+    color: white;
+}
+
+/* Aktif Bağlantı Stili (Basit örnek) */
+/* Gerçek uygulamada JavaScript veya sunucu tarafı mantıkla daha iyi yönetilir */
+/*
+.nav-item a.active {
+    color: #1abc9c;
+    border-bottom: 3px solid #1abc9c;
+}
+*/
+
+/* Açılır Menü Stilleri */
+.dropdown-menu, .dropdown-menu-submenu {
+    display: none;
+    position: absolute;
+    top: 100%; /* Ana öğenin hemen altında */
+    left: 0;
+    background-color: #34495e; /* Biraz daha açık mavi-gri */
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 100;
+    border-radius: 0 0 5px 5px;
+}
+
+.dropdown-submenu .dropdown-menu-submenu {
+    top: 0;
+    left: 100%; /* Alt açılır menünün sağında */
+    border-radius: 0 5px 5px 5px;
+}
+
+
+.nav-item:hover > .dropdown-menu,
+.dropdown-submenu:hover > .dropdown-menu-submenu {
+    display: block;
+}
+
+.dropdown-menu li a, .dropdown-menu-submenu li a {
+    color: #ecf0f1;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap; /* Metinlerin alt satıra kaymasını engelle */
+    font-size: 0.95rem;
+}
+
+.dropdown-menu li a:hover, .dropdown-menu-submenu li a:hover {
+    background-color: #1abc9c;
+    color: #2c3e50;
+}
+
+.dropdown-menu li .fas, .dropdown-menu-submenu li .fas {
+    float: right;
+    margin-left: 10px;
+}
+
+/* Hamburger Menü İkonu */
+.menu-icon {
+    display: none; /* Varsayılan olarak gizli */
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #ecf0f1;
+}
+
+/* Tablet ve Mobil Görünüm */
+@media screen and (max-width: 960px) {
+    .navbar-container {
+        position: relative; /* Hamburger menü konumu için */
+    }
+
+    .nav-menu {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 80px; /* Navbar yüksekliği kadar aşağıda */
+        left: -100%; /* Başlangıçta ekranın dışında */
+        opacity: 1;
+        transition: all 0.5s ease;
+        background-color: #2c3e50; /* Mobil menü arka planı */
+        padding-bottom: 20px;
+    }
+
+    .nav-menu.active { /* JavaScript ile eklenecek class */
+        left: 0; /* Ekrana getir */
+        opacity: 1;
+        transition: all 0.5s ease;
+        z-index: 1;
+    }
+
+    .nav-item {
+        width: 100%;
+        border-top: 1px solid rgba(236, 240, 241, 0.1);
+    }
+    .nav-item:first-child {
+        border-top: none;
+    }
+
+
+    .nav-links {
+        padding: 1.5rem;
+        width: 100%;
+        display: table; /* Tam genişlikte tıklanabilir alan */
+        text-align: center;
+    }
+
+    .nav-links.btn {
+        display: block;
+        text-align: center;
+        margin: 1rem auto;
+        width: 80%;
+        padding: 12px;
+    }
+
+
+    .navbar-logo {
+        /* Mobil için logo konumlandırması gerekebilir veya sabit bırakılabilir */
+    }
+
+    .menu-icon {
+        display: block; /* Hamburger ikonu görünür yap */
+    }
+
+    /* Açılır menülerin mobil uyumu */
+    .dropdown-menu, .dropdown-menu-submenu {
+        position: static; /* Akış içinde normal davran */
+        display: none; /* Başlangıçta kapalı */
+        width: 100%;
+        background-color: #34495e;
+        box-shadow: none;
+        padding-left: 20px; /* İçeriden başlasın */
+    }
+    .dropdown-menu li a, .dropdown-menu-submenu li a {
+        padding: 12px 20px;
+        text-align: left;
+    }
+
+
+    /* JavaScript ile açılır menülerin mobil cihazlarda tıklamayla açılması gerekir.
+       Bu CSS sadece hover durumunu kaldırır, tıklama JS ile yönetilmeli. */
+    .nav-item:hover > .dropdown-menu,
+    .dropdown-submenu:hover > .dropdown-menu-submenu {
+        /* display: none;  Normalde hover'ı mobil için devre dışı bırakırız,
+                           ama JS ile toggle yapacağımız için bu satırı kaldırabiliriz
+                           veya JS ile yönetebiliriz. Şimdilik basitlik için hover
+                           büyük ekranda çalışsın diye bırakıyorum. Mobil için JS şart.
+        */
+    }
+    .nav-item.open > .dropdown-menu, /* JS ile eklenecek class */
+    .dropdown-submenu.open > .dropdown-menu-submenu { /* JS ile eklenecek class */
+        display: block;
+    }
+
+    .nav-links .fa-caret-down, .nav-links .fa-caret-right {
+        margin-left: 8px;
+    }
+}
