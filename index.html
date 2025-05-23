@@ -1,423 +1,110 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <style>/* Genel Stiller */
-body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-.content {
-    padding: 100px 20px 20px; /* Navbar'ın altında kalmaması için üst padding */
-    text-align: center;
-}
-
-.navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    height: 80px; /* Navbar yüksekliği */
-}
-
-/* Navbar Stilleri */
-.navbar {
-    background-color: #2c3e50; /* Koyu mavi-gri */
-    color: #ecf0f1; /* Açık gri */
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.1rem;
-    position: fixed; /* Sayfa kaydırıldığında sabit kalması için */
-    top: 0;
-    width: 100%;
-    z-index: 999; /* Diğer öğelerin üzerinde kalması için */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-logo {
-    color: #ecf0f1;
-    text-decoration: none;
-    font-size: 1.8rem;
-    font-weight: bold;
-}
-
-.nav-menu {
-    display: flex;
-    list-style: none;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-item {
-    position: relative; /* Açılır menüler için */
-}
-
-.nav-links {
-    color: #ecf0f1;
-    display: block;
-    padding: 28px 20px; /* Yüksekliği navbar ile aynı hizada tutmak için */
-    text-decoration: none;
-    transition: color 0.3s ease-out, background-color 0.3s ease-out;
-}
-
-.nav-links:hover {
-    color: #1abc9c; /* Turkuaz */
-}
-
-.nav-links.btn {
-    background-color: #e74c3c; /* Kırmızı */
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin-left: 15px;
-    transition: background-color 0.3s ease;
-}
-
-.nav-links.btn:hover {
-    background-color: #c0392b; /* Daha koyu kırmızı */
-    color: white;
-}
-
-/* Aktif Bağlantı Stili (Basit örnek) */
-/* Gerçek uygulamada JavaScript veya sunucu tarafı mantıkla daha iyi yönetilir */
-/*
-.nav-item a.active {
-    color: #1abc9c;
-    border-bottom: 3px solid #1abc9c;
-}
-*/
-
-/* Açılır Menü Stilleri */
-.dropdown-menu, .dropdown-menu-submenu {
-    display: none;
-    position: absolute;
-    top: 100%; /* Ana öğenin hemen altında */
-    left: 0;
-    background-color: #34495e; /* Biraz daha açık mavi-gri */
-    list-style: none;
-    padding: 10px 0;
-    margin: 0;
-    min-width: 200px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    z-index: 100;
-    border-radius: 0 0 5px 5px;
-}
-
-.dropdown-submenu .dropdown-menu-submenu {
-    top: 0;
-    left: 100%; /* Alt açılır menünün sağında */
-    border-radius: 0 5px 5px 5px;
-}
-
-
-.nav-item:hover > .dropdown-menu,
-.dropdown-submenu:hover > .dropdown-menu-submenu {
-    display: block;
-}
-
-.dropdown-menu li a, .dropdown-menu-submenu li a {
-    color: #ecf0f1;
-    padding: 12px 20px;
-    text-decoration: none;
-    display: block;
-    white-space: nowrap; /* Metinlerin alt satıra kaymasını engelle */
-    font-size: 0.95rem;
-}
-
-.dropdown-menu li a:hover, .dropdown-menu-submenu li a:hover {
-    background-color: #1abc9c;
-    color: #2c3e50;
-}
-
-.dropdown-menu li .fas, .dropdown-menu-submenu li .fas {
-    float: right;
-    margin-left: 10px;
-}
-
-/* Hamburger Menü İkonu */
-.menu-icon {
-    display: none; /* Varsayılan olarak gizli */
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: #ecf0f1;
-}
-
-/* Tablet ve Mobil Görünüm */
-@media screen and (max-width: 960px) {
-    .navbar-container {
-        position: relative; /* Hamburger menü konumu için */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deluxe Navbar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
     }
-
-    .nav-menu {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        position: absolute;
-        top: 80px; /* Navbar yüksekliği kadar aşağıda */
-        left: -100%; /* Başlangıçta ekranın dışında */
-        opacity: 1;
-        transition: all 0.5s ease;
-        background-color: #2c3e50; /* Mobil menü arka planı */
-        padding-bottom: 20px;
-    }
-
-    .nav-menu.active { /* JavaScript ile eklenecek class */
-        left: 0; /* Ekrana getir */
-        opacity: 1;
-        transition: all 0.5s ease;
-        z-index: 1;
-    }
-
-    .nav-item {
-        width: 100%;
-        border-top: 1px solid rgba(236, 240, 241, 0.1);
-    }
-    .nav-item:first-child {
-        border-top: none;
-    }
-
-
-    .nav-links {
-        padding: 1.5rem;
-        width: 100%;
-        display: table; /* Tam genişlikte tıklanabilir alan */
-        text-align: center;
-    }
-
-    .nav-links.btn {
-        display: block;
-        text-align: center;
-        margin: 1rem auto;
-        width: 80%;
-        padding: 12px;
-    }
-
-
-    .navbar-logo {
-        /* Mobil için logo konumlandırması gerekebilir veya sabit bırakılabilir */
-    }
-
-    .menu-icon {
-        display: block; /* Hamburger ikonu görünür yap */
-    }
-
-    /* Açılır menülerin mobil uyumu */
-    .dropdown-menu, .dropdown-menu-submenu {
-        position: static; /* Akış içinde normal davran */
-        display: none; /* Başlangıçta kapalı */
-        width: 100%;
-        background-color: #34495e;
-        box-shadow: none;
-        padding-left: 20px; /* İçeriden başlasın */
-    }
-    .dropdown-menu li a, .dropdown-menu-submenu li a {
-        padding: 12px 20px;
-        text-align: left;
-    }
-
-
-    /* JavaScript ile açılır menülerin mobil cihazlarda tıklamayla açılması gerekir.
-       Bu CSS sadece hover durumunu kaldırır, tıklama JS ile yönetilmeli. */
-    .nav-item:hover > .dropdown-menu,
-    .dropdown-submenu:hover > .dropdown-menu-submenu {
-        /* display: none;  Normalde hover'ı mobil için devre dışı bırakırız,
-                           ama JS ile toggle yapacağımız için bu satırı kaldırabiliriz
-                           veya JS ile yönetebiliriz. Şimdilik basitlik için hover
-                           büyük ekranda çalışsın diye bırakıyorum. Mobil için JS şart.
-        */
-    }
-    .nav-item.open > .dropdown-menu, /* JS ile eklenecek class */
-    .dropdown-submenu.open > .dropdown-menu-submenu { /* JS ile eklenecek class */
-        display: block;
-    }
-
-    .nav-links .fa-caret-down, .nav-links .fa-caret-right {
-        margin-left: 8px;
-    }
-}
-</style>
-    <script>const mobileMenu = document.getElementById('mobile-menu');
-const navMenu = document.querySelector('.nav-menu');
-const navLinks = document.querySelectorAll('.nav-links');
-const dropdowns = document.querySelectorAll('.nav-item.dropdown > .nav-links'); // Sadece ana dropdown tetikleyicileri
-const subDropdowns = document.querySelectorAll('.dropdown-submenu > a'); // Alt dropdown tetikleyicileri
-
-// Hamburger menüyü aç/kapat
-mobileMenu.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    // İkonu değiştir (isteğe bağlı)
-    const icon = mobileMenu.querySelector('i');
-    if (icon.classList.contains('fa-bars')) {
-        icon.classList.remove('fa-bars');
-        icon.classList.add('fa-times');
-    } else {
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
-    }
-});
-
-// Mobil menüde bir linke tıklandığında menüyü kapat (opsiyonel)
-navLinks.forEach(link => {
-    // Eğer link bir dropdown tetikleyicisi değilse veya alt menü içindeyse
-    if (!link.parentElement.classList.contains('dropdown') && !link.closest('.dropdown-menu')) {
-        link.addEventListener('click', () => {
-            if (navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                mobileMenu.querySelector('i').classList.remove('fa-times');
-                mobileMenu.querySelector('i').classList.add('fa-bars');
-            }
-        });
-    }
-});
-
-
-// Mobil ve tablet için açılır menüleri tıklama ile yönet
-function handleDropdownClick(event) {
-    // Eğer mobil menü aktif değilse (yani masaüstü görünümdeyse) ve hover çalışıyorsa, tıklamayı engelleme
-    const isMobileView = window.innerWidth <= 960;
-    if (!isMobileView && getComputedStyle(event.currentTarget.nextElementSibling).display !== 'none' && event.type === 'click') {
-        // Masaüstünde hover ile zaten açıksa ve tıklandıysa, varsayılan davranışı (linke gitme) engelleme
-        // Eğer link # ise bir şey yapma, değilse gidebilir.
-        if(event.currentTarget.getAttribute('href') === '#') {
-            event.preventDefault();
-        }
-        return;
-    }
-
-
-    if (isMobileView) {
-        event.preventDefault(); // Linke gitmeyi engelle, sadece menüyü aç/kapat
-        const currentDropdownMenu = event.currentTarget.nextElementSibling;
-        const parentItem = event.currentTarget.parentElement;
-
-        // Diğer açık dropdown'ları kapat (aynı seviyedeki)
-        if (parentItem.parentElement.classList.contains('nav-menu') || parentItem.parentElement.classList.contains('dropdown-menu')) {
-            const siblingDropdowns = Array.from(parentItem.parentElement.children).filter(child => child !== parentItem && (child.classList.contains('dropdown') || child.classList.contains('dropdown-submenu')));
-            siblingDropdowns.forEach(sibling => {
-                const openMenu = sibling.querySelector('.dropdown-menu, .dropdown-menu-submenu');
-                if (openMenu && openMenu.style.display === 'block') {
-                    openMenu.style.display = 'none';
-                    sibling.classList.remove('open');
-                }
-            });
-        }
-
-
-        if (currentDropdownMenu) {
-            if (currentDropdownMenu.style.display === 'block') {
-                currentDropdownMenu.style.display = 'none';
-                parentItem.classList.remove('open');
-            } else {
-                currentDropdownMenu.style.display = 'block';
-                parentItem.classList.add('open');
-            }
-        }
-    }
-}
-
-dropdowns.forEach(dropdown => {
-    // Masaüstünde hover ile açılacağı için tıklama olayını sadece mobil için ekleyebiliriz
-    // Ya da hem tıklama hem hover'ı yönetebiliriz.
-    // Şimdilik tıklama ekleyelim, CSS zaten hover'ı hallediyor.
-    dropdown.addEventListener('click', handleDropdownClick);
-});
-
-subDropdowns.forEach(subDropdown => {
-    subDropdown.addEventListener('click', handleDropdownClick);
-});
-
-
-// Sayfa yeniden boyutlandırıldığında mobil menü ve dropdown davranışlarını düzelt
-window.addEventListener('resize', () => {
-    const isMobileView = window.innerWidth <= 960;
-    if (!isMobileView) {
-        // Masaüstü görünüme geçildiğinde mobil menüyü kapat
-        if (navMenu.classList.contains('active')) {
-            navMenu.classList.remove('active');
-            mobileMenu.querySelector('i').classList.remove('fa-times');
-            mobileMenu.querySelector('i').classList.add('fa-bars');
-        }
-        // Masaüstünde JS ile açılmış dropdown'ları sıfırla (CSS hover devralır)
-        document.querySelectorAll('.dropdown-menu, .dropdown-menu-submenu').forEach(menu => {
-            menu.style.display = ''; // CSS'in yönetmesine izin ver
-        });
-        document.querySelectorAll('.nav-item.open, .dropdown-submenu.open').forEach(item => {
-            item.classList.remove('open');
-        });
-    } else {
-        // Mobil görünüme geçildiğinde, hover ile açık kalmış olabilecek
-        // dropdown'ların display stilini JS'in yönetebilmesi için sıfırla.
-        // Eğer CSS'de :hover ile display:block varsa bu sorun yaratabilir.
-        // Bu yüzden mobil için :hover'ı iptal etmek veya JS ile kontrol etmek daha iyidir.
-        // Mevcut CSS'imiz mobil için hover'ı doğrudan display:block yapmıyor,
-        // sadece masaüstü için, o yüzden bu kısım şimdilik çok kritik değil.
-    }
-});
-
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gelişmemiş Navbar</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  </script>
 </head>
-<body>
+<body class="bg-gradient-to-br from-gray-100 to-white dark:from-gray-900 dark:to-black transition duration-500" id="page">
 
-<nav class="navbar">
-    <div class="navbar-container">
-        <a href="index.html" class="navbar-logo">MarkaLogosu</a>
-        <div class="menu-icon" id="mobile-menu">
-            <i class="fas fa-bars"></i>
-        </div>
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="#" class="nav-links">Ana Sayfa</a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-links">Hakkımızda</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-links">
-                    Hizmetler <i class="fas fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Web Tasarım</a></li>
-                    <li><a href="#">SEO</a></li>
-                    <li><a href="#">Mobil Uygulama</a></li>
-                    <li class="dropdown-submenu">
-                        <a href="#">Diğer <i class="fas fa-caret-right"></i></a>
-                        <ul class="dropdown-menu-submenu">
-                             <li><a href="#">Danışmanlık</a></li>
-                             <li><a href="#">Eğitim</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-links">Portfolyo</a>
-            </li>
-            <li class="nav-item">
-                <a href="contact.html" class="nav-links">İletişim</a>
-            </li>
-            <li class="nav-item nav-cta">
-                <a href="#" class="nav-links btn">Teklif Al</a>
-            </li>
-        </ul>
+  <!-- Navbar -->
+  <nav class="animate__animated animate__fadeInDown sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-gray-800/60 border-b border-gray-200 dark:border-gray-700 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <img src="https://via.placeholder.com/36" class="rounded-full w-9 h-9">
+        <span class="text-xl font-bold text-gray-800 dark:text-white tracking-wide">DeluxeNav</span>
+      </div>
+
+      <!-- Menu -->
+      <ul class="hidden md:flex items-center gap-6 text-gray-700 dark:text-gray-300 text-sm font-medium">
+        <li class="group relative">
+          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-all">
+            Anasayfa
+            <span class="absolute bottom-0 left-0 w-0 group-hover:w-full h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-300"></span>
+          </a>
+        </li>
+        <li class="group relative">
+          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-all">Hizmetler</a>
+          <ul class="absolute top-full left-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-xl rounded-md hidden group-hover:block z-20 animate__animated animate__fadeIn">
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Web Tasarımı</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">SEO</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Danışmanlık</a></li>
+          </ul>
+        </li>
+        <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Blog</a></li>
+        <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition">İletişim</a></li>
+
+        <!-- Dil -->
+        <li class="relative group">
+          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">Dil</a>
+          <ul class="absolute left-0 top-full mt-2 bg-white dark:bg-gray-800 shadow rounded hidden group-hover:block animate__animated animate__fadeIn">
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Türkçe</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">English</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Sağ Kısım -->
+      <div class="flex items-center gap-3">
+        <!-- Dark Mode -->
+        <button id="toggleDark" class="text-gray-700 dark:text-yellow-300 transition-all">
+          <svg id="moon" class="w-6 h-6 hidden dark:inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>
+          </svg>
+          <svg id="sun" class="w-6 h-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 3v2m0 14v2m9-9h-2M5 12H3m16.24 4.24l-1.42-1.42M7.76 7.76L6.34 6.34m0 11.32l1.42-1.42m10.48-10.48l-1.42 1.42"/>
+          </svg>
+        </button>
+
+        <!-- Giriş Kayıt -->
+        <a href="#" class="text-sm px-3 py-1 rounded hover:bg-blue-100 dark:hover:bg-gray-700">Giriş</a>
+        <a href="#" class="text-sm px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Kayıt Ol</a>
+
+        <!-- Hamburger -->
+        <button class="md:hidden" id="menu-toggle">
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
     </div>
-</nav>
 
-<div class="content">
-    <h1>Sayfa Başlığı</h1>
-    <p>Bu gelişmiş navbar'ın altındaki örnek içeriktir.</p>
-</div>
+    <!-- Mobile Menu -->
+    <div class="md:hidden hidden px-4 pb-4 animate__animated animate__fadeInDown" id="mobile-menu">
+      <ul class="flex flex-col gap-2 mt-3 text-gray-700 dark:text-gray-200">
+        <li><a href="#" class="block px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">Anasayfa</a></li>
+        <li><a href="#" class="block px-4 py-2">Hizmetler</a></li>
+        <li><a href="#" class="block px-4 py-2">Blog</a></li>
+        <li><a href="#" class="block px-4 py-2">İletişim</a></li>
+        <li><a href="#" class="block px-4 py-2">Dil: Türkçe</a></li>
+        <li><a href="#" class="block px-4 py-2">Giriş</a></li>
+        <li><a href="#" class="block px-4 py-2 bg-blue-600 text-white rounded text-center">Kayıt Ol</a></li>
+      </ul>
+    </div>
+  </nav>
 
-<script src="script.js"></script>
+  <script>
+    const darkToggle = document.getElementById('toggleDark');
+    const html = document.getElementById('page');
+    darkToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+    });
+
+    const menuBtn = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  </script>
+
 </body>
 </html>
