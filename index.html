@@ -1,108 +1,108 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Deluxe Navbar</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deluxe OpenAI-Style Navbar</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      },
       darkMode: 'class'
     }
   </script>
+  <style>
+    .neon-text {
+      text-shadow: 0 0 5px #00f2ff, 0 0 10px #00f2ff, 0 0 20px #00f2ff;
+    }
+    .scroll-effect {
+      transition: all 0.3s ease;
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-gray-100 to-white dark:from-gray-900 dark:to-black transition duration-500" id="page">
+<body class="bg-white dark:bg-black text-gray-900 dark:text-white font-sans transition duration-500" id="page">
+
+  <!-- Video Background (Optional - replace src with your own hosted video) -->
+  <video autoplay muted loop class="fixed top-0 left-0 w-full h-full object-cover z-[-1] opacity-20">
+    <source src="https://www.videvo.net/videvo_files/converted/2015_08/preview/Dark_Sky_TimeLapse.mov42852.webm" type="video/webm">
+  </video>
 
   <!-- Navbar -->
-  <nav class="animate__animated animate__fadeInDown sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-gray-800/60 border-b border-gray-200 dark:border-gray-700 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-      
-      <!-- Logo -->
+  <nav id="navbar" class="scroll-effect fixed top-0 w-full z-50 bg-white/70 dark:bg-gray-900/70 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 py-4">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <img src="https://via.placeholder.com/36" class="rounded-full w-9 h-9">
-        <span class="text-xl font-bold text-gray-800 dark:text-white tracking-wide">DeluxeNav</span>
+        <span class="text-2xl font-bold neon-text">DassakNav</span>
       </div>
 
-      <!-- Menu -->
-      <ul class="hidden md:flex items-center gap-6 text-gray-700 dark:text-gray-300 text-sm font-medium">
-        <li class="group relative">
-          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-all">
-            Anasayfa
-            <span class="absolute bottom-0 left-0 w-0 group-hover:w-full h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-300"></span>
-          </a>
-        </li>
-        <li class="group relative">
-          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-all">Hizmetler</a>
-          <ul class="absolute top-full left-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-xl rounded-md hidden group-hover:block z-20 animate__animated animate__fadeIn">
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Web Tasarımı</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">SEO</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Danışmanlık</a></li>
-          </ul>
-        </li>
-        <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Blog</a></li>
-        <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition">İletişim</a></li>
-
-        <!-- Dil -->
+      <ul class="hidden md:flex items-center gap-8 font-medium">
+        <li><a href="#" class="relative group">Anasayfa <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span></a></li>
         <li class="relative group">
-          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">Dil</a>
-          <ul class="absolute left-0 top-full mt-2 bg-white dark:bg-gray-800 shadow rounded hidden group-hover:block animate__animated animate__fadeIn">
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Türkçe</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">English</a></li>
+          <a href="#">Hizmetler</a>
+          <ul class="absolute left-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded shadow hidden group-hover:block animate__animated animate__fadeIn">
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Tasarım</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">SEO</a></li>
           </ul>
         </li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">İletişim</a></li>
       </ul>
 
-      <!-- Sağ Kısım -->
-      <div class="flex items-center gap-3">
-        <!-- Dark Mode -->
-        <button id="toggleDark" class="text-gray-700 dark:text-yellow-300 transition-all">
-          <svg id="moon" class="w-6 h-6 hidden dark:inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>
-          </svg>
-          <svg id="sun" class="w-6 h-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M12 3v2m0 14v2m9-9h-2M5 12H3m16.24 4.24l-1.42-1.42M7.76 7.76L6.34 6.34m0 11.32l1.42-1.42m10.48-10.48l-1.42 1.42"/>
-          </svg>
-        </button>
+      <div class="flex items-center gap-4">
+        <button id="darkToggle" class="text-xl">🌓</button>
 
-        <!-- Giriş Kayıt -->
-        <a href="#" class="text-sm px-3 py-1 rounded hover:bg-blue-100 dark:hover:bg-gray-700">Giriş</a>
-        <a href="#" class="text-sm px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Kayıt Ol</a>
+        <!-- User Dropdown -->
+        <div class="relative group">
+          <img src="https://via.placeholder.com/32" class="rounded-full cursor-pointer w-8 h-8"/>
+          <div class="absolute right-0 mt-2 w-48 p-4 bg-white/30 dark:bg-gray-800/50 backdrop-blur-lg rounded-xl shadow-xl hidden group-hover:block animate__animated animate__fadeIn">
+            <a href="#" class="block py-1">Profil</a>
+            <a href="#" class="block py-1">Ayarlar</a>
+            <a href="#" class="block py-1 text-red-500">Çıkış</a>
+          </div>
+        </div>
 
-        <!-- Hamburger -->
-        <button class="md:hidden" id="menu-toggle">
-          <svg class="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button id="menu-toggle" class="md:hidden">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
       </div>
     </div>
-
-    <!-- Mobile Menu -->
-    <div class="md:hidden hidden px-4 pb-4 animate__animated animate__fadeInDown" id="mobile-menu">
-      <ul class="flex flex-col gap-2 mt-3 text-gray-700 dark:text-gray-200">
-        <li><a href="#" class="block px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">Anasayfa</a></li>
-        <li><a href="#" class="block px-4 py-2">Hizmetler</a></li>
-        <li><a href="#" class="block px-4 py-2">Blog</a></li>
-        <li><a href="#" class="block px-4 py-2">İletişim</a></li>
-        <li><a href="#" class="block px-4 py-2">Dil: Türkçe</a></li>
-        <li><a href="#" class="block px-4 py-2">Giriş</a></li>
-        <li><a href="#" class="block px-4 py-2 bg-blue-600 text-white rounded text-center">Kayıt Ol</a></li>
+    <div class="md:hidden hidden px-4 pb-4" id="mobile-menu">
+      <ul class="flex flex-col gap-3 mt-3">
+        <li><a href="#">Anasayfa</a></li>
+        <li><a href="#">Hizmetler</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">İletişim</a></li>
       </ul>
     </div>
   </nav>
 
   <script>
-    const darkToggle = document.getElementById('toggleDark');
+    const darkToggle = document.getElementById('darkToggle');
     const html = document.getElementById('page');
-    darkToggle.addEventListener('click', () => {
-      html.classList.toggle('dark');
-    });
+    darkToggle.addEventListener('click', () => html.classList.toggle('dark'));
 
-    const menuBtn = document.getElementById('menu-toggle');
+    const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
+    menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 10) {
+        nav.classList.add('py-2');
+        nav.classList.remove('py-4');
+      } else {
+        nav.classList.add('py-4');
+        nav.classList.remove('py-2');
+      }
     });
   </script>
 
