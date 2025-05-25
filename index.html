@@ -1,140 +1,209 @@
 <!DOCTYPE html>
-<html lang="tr" class="scroll-smooth">
+<html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>XassemblyNet</title>
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Animate.css -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Tailwind config -->
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif']
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koyu Temalı Fotoğraf Birleştirici</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #1a202c; /* Koyu Gri Arka Plan */
+            color: #e2e8f0; /* Açık Gri Metin */
+            margin: 0;
+            padding: 1rem;
         }
-      }
-    };
-  </script>
-
-  <style>
-    sergenyalcin{
-      font-family: Helvetica;
-    }
-  </style>
-
-  <!-- Google Fonts (Inter) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  
-  <style>
-    .neon-text {
-      text-shadow: 0 0 5px #00f6ff, 0 0 10px #00f6ff, 0 0 20px #00f6ff;
-    }
-  </style>
+        .container {
+            background-color: #2d3748; /* Daha Koyu Gri Kart Arka Planı */
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        button {
+            background-color: #4a5568; /* Orta Gri Düğme */
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 1.5rem;
+        }
+        button:hover {
+            background-color: #3b4554; /* Hover'da Daha Koyu Gri */
+        }
+        button:disabled {
+            background-color: #718096; /* Devre Dışı Bırakılmış Düğme Rengi */
+            cursor: not-allowed;
+        }
+        #imageContainer img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.375rem;
+            margin-top: 1.5rem;
+            border: 2px solid #4a5568;
+        }
+        .loader {
+            border: 4px solid #f3f3f3; /* Yükleyici halkasının açık kısmı */
+            border-top: 4px solid #63b3ed; /* Yükleyici halkasının hareketli mavi kısmı */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none; /* Başlangıçta gizli */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error-message {
+            color: #fc8181; /* Kırmızı Hata Mesajı */
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: rgba(252, 129, 129, 0.15);
+            border-radius: 0.375rem;
+            border: 1px solid #e53e3e;
+            font-size: 0.875rem;
+            text-align: left;
+        }
+        .info-text {
+            font-size: 0.875rem; /* 14px */
+            color: #a0aec0; /* Daha Açık Gri Bilgi Metni */
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .sub-info {
+            font-size: 0.75rem; /* 12px */
+            color: #718096; /* Daha da açık gri */
+            margin-top: 0.5rem;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-black text-gray-800 dark:text-white font-sans transition duration-300" id="page">
+<body>
+    <div class="container">
+        <h1 class="text-2xl font-bold mb-4 text-gray-100">Fotoğraf Birleştirici</h1>
+        <p class="info-text">
+            Yüklediğiniz iki çocuğun (biri papyonlu beyaz gömlekli, diğeri yeşil tişörtlü) özelliklerini kullanarak, onları koyu, atmosferik ve sanatsal bir temada birleştiren yeni bir fotoğraf oluşturmak için aşağıdaki düğmeye tıklayın.
+        </p>
+        <p class="sub-info">
+            Not: Yapay zeka, çocukların temel özelliklerini dikkate alarak yeni bir görsel üretecektir. Sonuç, orijinal fotoğrafların birebir kopyası olmayabilir ancak onlardan ilham alacaktır. Fotoğraf üretimi biraz zaman alabilir. Tarayıcınızın geliştirici konsolunu (F12) kontrol ederek işlem adımlarını ve olası hataları görebilirsiniz.
+        </p>
 
-  <!-- Navbar -->
-  <nav id="navbar" class="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-gray-800/60 border-b border-gray-200 dark:border-gray-700 shadow-md transition-all py-4 animate__animated animate__fadeInDown">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
-      
-      <!-- Logo -->
-      <div class="flex items-center gap-3">
-        <span class="text-2xl font-bold neon-text tracking-wide">XassemblyNet</span>
-      </div>
+        <button id="generateButton" onclick="generateImage()">Fotoğraf Oluştur</button>
 
-      <!-- Menu -->
-      <ul class="hidden md:flex items-center gap-6 text-sm font-medium">
-        <li><a href="indexanasayfa.html" class="hover:text-blue-500 transition relative group">Anasayfa <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span></a></li>
-        <li><a href="#" class="hover:text-blue-500 transition">Hizmetler</a></li>
-        <li><a href="#" class="hover:text-blue-500 transition">Blog</a></li>
-        <li><a href="#" class="hover:text-blue-500 transition">İletişim</a></li>
-        <li><a href="#" class="hover:text-blue-500 transition">🌐 Türkçe</a></li>
-      </ul>
-
-      <!-- Sağ -->
-      <div class="flex items-center gap-2">
-        <!-- Dark Mode -->
-        <button id="toggleDark">
-          <svg id="moon" class="w-6 h-6 hidden dark:inline text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
-          <svg id="sun" class="w-6 h-6 dark:hidden text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v2m0 14v2m9-9h-2M5 12H3m16.24 4.24l-1.42-1.42M7.76 7.76L6.34 6.34m0 11.32l1.42-1.42m10.48-10.48l-1.42 1.42"/></svg>
-        </button>
-
-        <a href="#" class="hidden md:inline px-3 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Giriş</a>
-        <a href="#" class="hidden md:inline px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Kayıt Ol</a>
-
-        <!-- Hamburger -->
-        <button class="md:hidden" id="menu-toggle">
-          <svg class="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
-      </div>
+        <div id="loader" class="loader"></div>
+        <div id="imageContainer">
+            </div>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
     </div>
 
-    <!-- Mobile Menu -->
-    <div class="md:hidden hidden px-4 pb-4 animate__animated" id="mobile-menu">
-      <ul class="flex flex-col gap-2 mt-3 text-gray-800 dark:text-white">
-        <li><a hrehovindexanasayfa.html" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded" onclick="closeMenu()">🏠 Anasayfa</a></li>
-        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">🛠 Hizmetler</a></li>
-        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">📰 Blog</a></li>
-        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">✉️ İletişim</a></li>
-        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">🌐 Türkçe</a></li>
-        <li><a href="#" class="block px-4 py-2" onclick="closeMenu()">🔐 Giriş</a></li>
-        <li><a href="#" class="block px-4 py-2 bg-blue-600 text-white rounded text-center" onclick="closeMenu()">📝 Kayıt Ol</a></li>
-      </ul>
-    </div>
-  </nav>
+    <script>
+        async function generateImage() {
+            console.log("generateImage fonksiyonu çağrıldı.");
 
-  <!-- Sayfa içeriği -->
-  <section class="h-[200vh] flex items-center justify-center text-center">
-    <h1 class="text-5xl font-bold neon-text">Hoşgeldin Baba!</h1>
-  </section>
+            const generateButton = document.getElementById('generateButton');
+            const loader = document.getElementById('loader');
+            const imageContainer = document.getElementById('imageContainer');
+            const errorMessage = document.getElementById('errorMessage');
 
-  <!-- JS -->
-  <script>
-    const darkToggle = document.getElementById('toggleDark');
-    const html = document.getElementById('page');
-    darkToggle.addEventListener('click', () => {
-      html.classList.toggle('dark');
-    });
+            if (!generateButton) console.error("generateButton elementi bulunamadı!");
+            if (!loader) console.error("loader elementi bulunamadı!");
+            if (!imageContainer) console.error("imageContainer elementi bulunamadı!");
+            if (!errorMessage) console.error("errorMessage elementi bulunamadı!");
 
-    const menuBtn = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
+            if (!generateButton || !loader || !imageContainer || !errorMessage) {
+                console.error("Bir veya daha fazla kritik arayüz elemanı eksik. İşlem durduruluyor.");
+                if (errorMessage) { // errorMessage'in kendisi null değilse hata göster
+                    errorMessage.textContent = "Kritik bir arayüz elemanı (buton, yükleyici vb.) kodda bulunamadı. Lütfen geliştirici konsolunu kontrol edin.";
+                    errorMessage.style.display = 'block';
+                }
+                return; // Fonksiyonun devam etmesini engelle
+            }
 
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-      mobileMenu.classList.remove('animate__fadeOutUp');
-      mobileMenu.classList.add('animate__fadeInDown');
-    });
+            console.log("Buton devre dışı bırakılıyor ve yükleyici gösteriliyor.");
+            generateButton.disabled = true;
+            loader.style.display = 'block';
+            imageContainer.innerHTML = ''; // Önceki resmi temizle
+            errorMessage.style.display = 'none'; // Önceki hata mesajını temizle
+            errorMessage.textContent = '';
 
-    function closeMenu() {
-      mobileMenu.classList.remove('animate__fadeInDown');
-      mobileMenu.classList.add('animate__fadeOutUp');
-      setTimeout(() => {
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('animate__fadeOutUp');
-      }, 400);
-    }
 
-    // Scroll shrink
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 10) {
-        navbar.classList.add('py-2');
-        navbar.classList.remove('py-4');
-      } else {
-        navbar.classList.remove('py-2');
-        navbar.classList.add('py-4');
-      }
-    });
-  </script>
+            const promptText = `Generate a single, realistic, and artistic photograph featuring two young boys together in a dark, atmospheric, and moody theme.
+The first boy has dark hair and is wearing a white short-sleeved formal shirt with a black bow tie.
+The second boy has light brown or dark blond hair and is wearing a green t-shirt that has a pixelated black and white design on it (similar to Minecraft graphics).
+Both children should appear naturally integrated into the same scene.
+The lighting should be dramatic, contributing to the dark and moody atmosphere.
+The style should be photographic and high quality. Ensure their faces are clearly visible and their likenesses are inspired by typical features of young boys with these descriptions.`;
+            console.log("İstem metni hazırlandı:", promptText);
 
+
+            const payload = {
+                instances: [{ prompt: promptText }],
+                parameters: { "sampleCount": 1 }
+            };
+            const apiKey = ""; // Bu ortamda API anahtarı otomatik olarak sağlanır.
+            const apiUrl = \`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=\${apiKey}\`;
+            console.log("API URL:", apiUrl);
+            console.log("Gönderilecek Yük (Payload):", JSON.stringify(payload));
+
+
+            try {
+                console.log("API'ye istek gönderilmeye çalışılıyor...");
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                console.log("API'den yanıt alındı, durum kodu:", response.status);
+
+                if (!response.ok) {
+                    let errorDataDetails = 'Sunucudan detaylı hata mesajı alınamadı.';
+                    try {
+                        const errorData = await response.json();
+                        errorDataDetails = errorData?.error?.message || JSON.stringify(errorData);
+                    } catch (e) {
+                        console.warn("API hata yanıtı JSON formatında değil, metin olarak okunuyor.", e);
+                        errorDataDetails = await response.text();
+                    }
+                    console.error('API Hata Yanıt Durumu:', response.status);
+                    console.error('API Hata Yanıt Detayları:', errorDataDetails);
+                    throw new Error(\`API isteği başarısız oldu: \${response.status} \${response.statusText}. Sunucu mesajı: \${errorDataDetails}\`);
+                }
+
+                console.log("API yanıtı başarılı (OK). JSON verisi işleniyor...");
+                const result = await response.json();
+                console.log("API JSON sonucu:", result);
+
+
+                if (result.predictions && result.predictions.length > 0 && result.predictions[0].bytesBase64Encoded) {
+                    const imageUrl = \`data:image/png;base64,\${result.predictions[0].bytesBase64Encoded}\`;
+                    console.log("Resim URL'i oluşturuldu. Resim gösteriliyor.");
+                    imageContainer.innerHTML = \`<img src="\${imageUrl}" alt="Oluşturulan Birleşik Fotoğraf">\`;
+                } else {
+                    console.error('API yanıt formatı beklenmedik veya resim verisi eksik:', result);
+                    throw new Error('Resim verisi alınamadı veya API yanıt formatı hatalı. Lütfen konsolu kontrol edin.');
+                }
+
+            } catch (error) {
+                console.error('Resim oluşturulurken bir hata yakalandı (catch bloğu):', error);
+                errorMessage.textContent = \`Bir hata oluştu: \${error.message}. Daha fazla teknik bilgi için lütfen tarayıcı konsolunu (F12) kontrol edin.\`;
+                errorMessage.style.display = 'block';
+            } finally {
+                console.log("Finally bloğu çalıştırılıyor: Buton tekrar etkinleştiriliyor ve yükleyici gizleniyor.");
+                generateButton.disabled = false;
+                loader.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
