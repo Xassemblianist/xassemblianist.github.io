@@ -1,8 +1,6 @@
-// Yılı otomatik yaz
 document.getElementById('y').textContent = new Date().getFullYear();
 
 
-// Tema — sistem temasını algıla ve localStorage'da hatırla
 const root = document.documentElement;
 const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
 const saved = localStorage.getItem('theme');
@@ -15,7 +13,6 @@ localStorage.setItem('theme', root.classList.contains('light') ? 'light' : 'dark
 });
 
 
-// E-posta kopyala + küçük görsel geri bildirim
 const copyBtn = document.getElementById('copyEmail');
 copyBtn.addEventListener('click', () => {
 const email = document.getElementById('mail').textContent.trim();
@@ -26,7 +23,6 @@ setTimeout(() => copyBtn.textContent = original, 900);
 });
 
 
-// Link butonlarına ripple efekti (ufak bir tatlılık)
 document.querySelectorAll('.btn').forEach(btn => {
 btn.addEventListener('pointerdown', e => {
 const r = document.createElement('span');
@@ -46,3 +42,4 @@ requestAnimationFrame(() => r.style.transform = 'scale(1)');
 setTimeout(() => { r.style.opacity='0'; setTimeout(()=>r.remove(), 400); }, 250);
 });
 });
+
