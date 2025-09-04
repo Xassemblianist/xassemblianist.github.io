@@ -1,0 +1,103 @@
+    :root{
+      --bg: #0b1020;
+      --bg2: #0e1326;
+      --text: #e6e8ef;
+      --muted: #a7afc0;
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --accent: #6aa5ff;
+      --accent-2: #a07bff;
+      --shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    :root.light{
+      --bg: #f5f7ff;
+      --bg2: #e9edff;
+      --text: #0b1020;
+      --muted: #546079;
+      --card: rgba(255,255,255,0.7);
+      --border: rgba(10,10,20,0.08);
+      --accent: #3a7bff;
+      --accent-2: #7f55ff;
+      --shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(106,165,255,0.15), transparent 60%),
+                  radial-gradient(900px 600px at 80% 20%, rgba(160,123,255,0.14), transparent 60%),
+                  linear-gradient(180deg, var(--bg), var(--bg2));
+      color: var(--text);
+      display:grid;
+      place-items:center;
+      padding: 24px;
+    }
+    .container{
+      width:min(800px, 100%);
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius: 28px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 28px);
+      position:relative;
+      overflow:hidden;
+    }
+    .glow{
+      position:absolute; inset:-2px; pointer-events:none; filter: blur(40px); opacity:0.3;
+      background: conic-gradient(from 180deg at 50% 50%, var(--accent), var(--accent-2), var(--accent));
+      mask: radial-gradient(120px 60px at 95% 0, black, transparent 60%);
+    }
+    header{display:flex; align-items:center; gap:18px;}
+    .avatar{
+      width:82px; height:82px; border-radius:50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display:grid; place-items:center; color:white; font-weight:800; font-size:28px;
+      border:1px solid var(--border);
+      box-shadow: var(--shadow);
+      user-select:none;
+    }
+    h1{font-size: clamp(22px, 3.2vw, 34px); margin:0 0 4px 0; letter-spacing:0.2px}
+    .subtitle{color: var(--muted); font-size: clamp(13px, 2vw, 16px);}
+
+    .links{
+      display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap:12px; margin-top:22px;
+    }
+    .btn{
+      position:relative;
+      display:flex; align-items:center; gap:12px;
+      border:1px solid var(--border);
+      background: color-mix(in oklab, var(--card) 70%, #fff 0%);
+      padding:14px 16px; border-radius: 16px; text-decoration:none; color:var(--text);
+      font-weight:600; letter-spacing:0.2px;
+      overflow:hidden; isolation:isolate;
+    }
+    .btn:hover{ transform: translateY(-1px); transition: transform 120ms ease; }
+    .btn:active{ transform: translateY(0); }
+    .btn .icon{ width:22px; height:22px; display:inline-grid; place-items:center; }
+    .btn .hint{ margin-left:auto; color:var(--muted); font-weight:500; font-size:13px; }
+    .btn::after{
+      content:""; position:absolute; inset:0; opacity:0; pointer-events:none;
+      background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 50%, transparent), color-mix(in oklab, var(--accent-2) 50%, transparent));
+      transition: opacity 160ms ease;
+    }
+    .btn:hover::after{opacity:0.08}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+    .chip{font-size:12px; color:var(--muted); border:1px dashed var(--border); padding:6px 10px; border-radius:999px}
+
+    footer{margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap}
+    .small{font-size:12px; color:var(--muted)}
+    .actions{display:flex; gap:8px; align-items:center}
+    .toggle, .copy{
+      border:1px solid var(--border); background: var(--card); color: var(--text);
+      border-radius:12px; padding:8px 12px; font-weight:600; cursor:pointer;
+    }
+    .toggle:hover, .copy:hover{transform: translateY(-1px)}
+
+    @media (max-width:480px){
+      header{align-items:flex-start}
+      .avatar{width:68px; height:68px; font-size:22px}
+    }
