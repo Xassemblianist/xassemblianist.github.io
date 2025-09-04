@@ -101,3 +101,10 @@
       header{align-items:flex-start}
       .avatar{width:68px; height:68px; font-size:22px}
     }
+    
+    .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
